@@ -77,7 +77,6 @@ MyMatrix MyMatrix::Identity(int dimension)
 		for (int j = 0; j < dimension; ++j)
 			ret[i][j] = (i == j ? 1.0f : 0.0f);
 
-
 	return ret;
 }
 

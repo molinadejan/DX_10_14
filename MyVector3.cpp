@@ -74,7 +74,7 @@ MyVector3 MyVector3::Normalize()
 	return MyVector3(x / len, y / len, z / len);
 }
 
-MyVector3 MyVector3::TransformCoord(MyVector3 & vec, MyMatrix & mat)
+MyVector3 MyVector3::TransformCoord(MyVector3& vec, MyMatrix& mat)
 {
 	MyVector3 ret;
 
@@ -93,13 +93,13 @@ MyVector3 MyVector3::TransformCoord(MyVector3 & vec, MyMatrix & mat)
 	return ret;
 }
 
-MyVector3 MyVector3::TransformNormal(MyVector3 & vec, MyMatrix & mat)
+MyVector3 MyVector3::TransformNormal(MyVector3& vec, MyMatrix& mat)
 {
 	MyVector3 ret;
 
-	ret.x = vec.x * mat[0][0] + vec.y * mat[1][0] + vec.z * mat[2][0] + 1.0f * mat[3][0];
-	ret.y = vec.x * mat[0][1] + vec.y * mat[1][1] + vec.z * mat[2][1] + 1.0f * mat[3][1];
-	ret.z = vec.x * mat[0][2] + vec.y * mat[1][2] + vec.z * mat[2][2] + 1.0f * mat[3][2];
+	ret.x = vec.x * mat[0][0] + vec.y * mat[1][0] + vec.z * mat[2][0];
+	ret.y = vec.x * mat[0][1] + vec.y * mat[1][1] + vec.z * mat[2][1];
+	ret.z = vec.x * mat[0][2] + vec.y * mat[1][2] + vec.z * mat[2][2];
 
 	return ret;
 }
