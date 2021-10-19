@@ -28,6 +28,9 @@ private:
 	MyVector3 m_vLookAt;
 	MyVector3 m_vUp;
 
+	MyVector3 m_vPosition;
+	float m_fBoxRotY;
+
 public:
 
 	void SetUp();

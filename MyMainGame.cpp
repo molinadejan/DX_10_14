@@ -2,6 +2,7 @@
 
 MyMainGame::MyMainGame()
 	: m_hBitmap(NULL), m_vEye(0, 0, -5), m_vLookAt(0, 0, 0), m_vUp(0, 1, 0)
+	, m_vPosition(0, 0, 0), m_fBoxRotY(0.0f)
 { }
 
 MyMainGame::~MyMainGame()
@@ -96,11 +97,21 @@ void MyMainGame::SetUp()
 
 void MyMainGame::Update()
 {
+	if (GetKeyState('A') & 0x8000)
+		m_fBoxRotY -= 0.1f;
+
+	if (GetKeyState('D') & 0x8000)
+		m_fBoxRotY += 0.1f;
+	// ³Ü
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
 
 	m_vLookAt = MyVector3(0.0f, 0.0f, 0.0f);
 	m_vEye = MyVector3(0.0f, 5.0f, -5.0f);
+
+	MyMatrix matR = MyMatrix::RotationY(m_fBoxRotY);
+	MyMatrix matT = MyMatrix::Translation(m_vPosition);
+	m_matWorld = matR * matT;
 
 	m_matView = MyMatrix::View(m_vEye, m_vLookAt, m_vUp);
 	m_matProj = MyMatrix::Projection(PI / 4.0f, (float)(rc.right / rc.bottom), 1.0f, 1000.0f);
@@ -115,6 +126,7 @@ void MyMainGame::Render(HDC hdc)
 
 	PatBlt(m_MemDC, rc.left, rc.top, rc.right, rc.bottom, WHITENESS);
 
+	// W V P
 	MyMatrix matWVP = m_matWorld * m_matView * m_matProj;
 
 	for (size_t i = 0; i < m_vecIndex.size(); i += 3)
