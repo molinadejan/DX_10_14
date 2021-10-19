@@ -15,7 +15,7 @@ private:
 	HDC m_MemDC;
 	HBITMAP m_hOldBitmap, m_hBitmap;
 
-	std::vector<MyVector3> m_vecVertext;
+	std::vector<MyVector3> m_vecVertex;
 	std::vector<DWORD> m_vecIndex;
 	std::vector<MyVector3> m_vecLineVertex;
 
@@ -55,5 +55,7 @@ public:
 
 	void Update_Rotation();
 	void Update_Move();
+
+	bool IsBackFace(MyVector3 &v1, MyVector3 &v2, MyVector3 &v3);
 };
 

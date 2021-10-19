@@ -34,7 +34,7 @@ float& MyMatrix::MyRow::operator[](int index)
 
 bool MyMatrix::Equal(float a, float b)
 {
-	if (a - EPSILON <= b && b - EPSILON <= a)
+	if (fabsf(a - b) <= EPSILON)
 		return true;
 
 	return false;
@@ -179,7 +179,7 @@ float MyMatrix::Determinant()
 		return (*this)[0][0];
 
 	if (Dimension() == 2)
-		return vecData[0][0] * vecData[1][1] - vecData[1][0] * vecData[0][1];
+		return (*this)[0][0] * (*this)[1][1] - (*this)[1][0] * (*this)[0][1];
 
 	float det = 0.0f;
 
@@ -300,10 +300,10 @@ MyMatrix MyMatrix::RotationZ(float angle)
 {
 	MyMatrix ret = MyMatrix::Identity(4);
 
-	ret[0][10] = cosf(angle);
+	ret[0][0] = cosf(angle);
 	ret[0][1] = sinf(angle);
-	ret[1][10] = -sinf(angle);
-	ret[21][21] = cosf(angle);
+	ret[1][0] = -sinf(angle);
+	ret[1][1] = cosf(angle);
 
 	return ret;
 }
@@ -328,9 +328,9 @@ MyMatrix MyMatrix::View(MyVector3 & pos, MyVector3 & lookAt, MyVector3 & up)
 	ret[2][1] = newUp.z;
 	ret[2][2] = look.z;
 
-	ret[3][0] = MyVector3::Dot(right, pos);
-	ret[3][1] = MyVector3::Dot(newUp, pos);
-	ret[3][2] = MyVector3::Dot(look, pos);
+	ret[3][0] = -MyVector3::Dot(right, pos);
+	ret[3][1] = -MyVector3::Dot(newUp, pos);
+	ret[3][2] = -MyVector3::Dot(look, pos);
 
 	return ret;
 }

@@ -1,9 +1,10 @@
 #include "MyVector3.h"
 #include "Global.h"
+#include <cmath>
 
 bool MyVector3::Equal(float a, float b)
 {
-	if (a - EPSILON <= b && b - EPSILON <= a)
+	if (fabsf(a - b) <= EPSILON)
 		return true;
 
 	return false;
@@ -27,7 +28,7 @@ bool MyVector3::operator==(const MyVector3 & vec)
 
 bool MyVector3::operator!=(const MyVector3 & vec)
 {
-	return !(operator==(vec));
+	return !(*this == vec);
 }
 
 MyVector3 MyVector3::operator+(const MyVector3 & vec)
@@ -82,7 +83,7 @@ MyVector3 MyVector3::TransformCoord(MyVector3 & vec, MyMatrix & mat)
 	ret.z = vec.x * mat[0][2] + vec.y * mat[1][2] + vec.z * mat[2][2] + 1.0f * mat[3][2];
 	float w = vec.x * mat[0][3] + vec.y * mat[1][3] + vec.z * mat[2][3] + 1.0f * mat[3][3];
 
-	if (!Equal(w, 0))
+	if (!Equal(w, 0.0f))
 	{
 		ret.x /= w;
 		ret.y /= w;

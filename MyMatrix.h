@@ -3,7 +3,7 @@
 #include "Global.h"
 #include "MyVector3.h"
 
-class MyVector3;
+class MyVector3; 
 
 class MyMatrix
 {
