@@ -71,5 +71,5 @@ public:
 	static MyMatrix View(MyVector3& pos, MyVector3& lookAt, MyVector3& up);
 	static MyMatrix Projection(float fovY, float aspect, float nearZ, float farZ);
 	static MyMatrix Viewport(float x, float y ,float w, float h, float minz, float max);
-
+	static MyMatrix Scale(float scale);
 };

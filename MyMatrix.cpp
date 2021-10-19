@@ -366,3 +366,14 @@ MyMatrix MyMatrix::Viewport(float x, float y, float w, float h, float minZ, floa
 
 	return ret;
 }
+
+MyMatrix MyMatrix::Scale(float scale)
+{
+	MyMatrix ret = MyMatrix::Identity(4);
+
+	ret[0][0] *= scale;
+	ret[1][1] *= scale;
+	ret[2][2] *= scale;
+
+	return ret;
+}

@@ -43,6 +43,8 @@ private:
 	float m_fCameraDistance;
 	MyVector3 m_vCamRotAngle;
 
+	float m_fScale;
+
 public:
 
 	void SetUp();
@@ -55,6 +57,7 @@ public:
 
 	void Update_Rotation();
 	void Update_Move();
+	void Update_Scale();
 
 	bool IsBackFace(MyVector3 &v1, MyVector3 &v2, MyVector3 &v3);
 };

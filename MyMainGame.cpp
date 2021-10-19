@@ -11,6 +11,7 @@ MyMainGame::MyMainGame()
 	, m_fCameraDistance(5.0f)
 	, m_isLButtonDown(false)
 	, m_vCamRotAngle(0, 0, 0)
+	, m_fScale(1.0f)
 { 
 	m_ptPrevMouse.x = 0;
 	m_ptPrevMouse.y = 0;
@@ -112,6 +113,7 @@ void MyMainGame::Update()
 {
 	Update_Rotation();
 	Update_Move();
+	Update_Scale();
 
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
@@ -120,21 +122,21 @@ void MyMainGame::Update()
 	MyMatrix matRY = MyMatrix::RotationY(m_vCamRotAngle.y);
 	MyMatrix matRC = matRX * matRY;
 
-
 	m_vLookAt = m_vPosition;
 	m_vEye = MyVector3(0.0f, m_fCameraDistance, -m_fCameraDistance);
 	m_vEye = MyVector3::TransformCoord(m_vEye, matRC);
 	m_vEye = m_vEye + m_vPosition;
 
+	MyMatrix matS = MyMatrix::Scale(m_fScale);
 	MyMatrix matR = MyMatrix::RotationY(m_fBoxRotY);
 	MyMatrix matT = MyMatrix::Translation(m_vPosition);
 
 	m_vBoxDirection = MyVector3(0, 0, 1);
 	m_vBoxDirection = MyVector3::TransformNormal(m_vBoxDirection, matR);
 
-	m_matWorld = matR * matT;
+	m_matWorld = matS * matR * matT;
 	m_matView = MyMatrix::View(m_vEye, m_vLookAt, m_vUp);
-	m_matProj = MyMatrix::Projection(PI / 4.0f, (float)(rc.right / rc.bottom), 1.0f, 1000.0f);
+	m_matProj = MyMatrix::Projection(PI / 4.0f, (float)rc.right / rc.bottom, 1.0f, 1000.0f);
 
 	m_matViewport = MyMatrix::Viewport(0.0f, 0.0f, (float)rc.right, (float)rc.bottom, 0.0f, 1.0f);
 }
@@ -160,6 +162,9 @@ void MyMainGame::Render(HDC hdc)
 		v2 = MyVector3::TransformCoord(v2, matWVP);
 
 		// To do someting ......
+
+		if (IsBackFace(v0, v1, v2))
+			continue;
 
 		v0 = MyVector3::TransformCoord(v0, m_matViewport);
 		v1 = MyVector3::TransformCoord(v1, m_matViewport);
@@ -228,7 +233,6 @@ void MyMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
-
 }
 
 void MyMainGame::SetGrid()
@@ -281,8 +285,6 @@ void MyMainGame::DrawGrid()
 
 	MyVector3 textX = MyVector3::TransformCoord(m_vAxisXTextPosition, mat);
 	MyVector3 textZ = MyVector3::TransformCoord(m_vAxisZTextPosition, mat);
-
-
 }
 
 void MyMainGame::Update_Rotation()
@@ -301,6 +303,25 @@ void MyMainGame::Update_Move()
 
 	if (GetKeyState('S') & 0x8000)
 		m_vPosition = m_vPosition - (m_vBoxDirection * 0.1f);
+}
+
+void MyMainGame::Update_Scale()
+{
+	if (GetKeyState('Z') & 0x8000)
+	{
+		m_fScale += 0.1f;
+
+		if (m_fScale > 3.0f)
+			m_fScale = 3.0f;
+	}
+
+	if (GetKeyState('X') & 0x8000)
+	{
+		m_fScale -= 0.1f;
+
+		if (m_fScale < 0.1f)
+			m_fScale = 0.1f;
+	}
 }
 
 bool MyMainGame::IsBackFace(MyVector3 & v1, MyVector3 & v2, MyVector3 & v3)
