@@ -2,8 +2,12 @@
 
 MyMainGame::MyMainGame()
 	: m_hBitmap(NULL), m_vEye(0, 0, -5), m_vLookAt(0, 0, 0), m_vUp(0, 1, 0)
-	, m_vPosition(0, 0, 0), m_fBoxRotY(0.0f)
-{ }
+	, m_vPosition(0, 0, 0), m_fBoxRotY(0.0f), m_vBoxDirection(0, 0, 1), m_fCameraDistance(5.0f)
+	, m_isLButtonDown(false), m_vCamRotAngle(0, 0, 0)
+{ 
+	m_ptPrevMouse.x = 0;
+	m_ptPrevMouse.y = 0;
+}
 
 MyMainGame::~MyMainGame()
 {
@@ -93,6 +97,8 @@ void MyMainGame::SetUp()
 	m_matView = MyMatrix::Identity(4);
 	m_matProj = MyMatrix::Identity(4);
 	m_matViewport = MyMatrix::Identity(4);
+
+	SetGrid();
 }
 
 void MyMainGame::Update()
@@ -151,10 +157,69 @@ void MyMainGame::Render(HDC hdc)
 		LineTo(m_MemDC, v0.x, v0.y);
 	}
 
+	DrawGrid();
+
 	BitBlt(hdc, 0, 0, rc.right, rc.bottom, m_MemDC, 0, 0, SRCCOPY);
 }
 
 void MyMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
+}
+
+void MyMainGame::SetGrid()
+{
+	int nNumHalfTile = 5;
+	float fInterval = 1.0f;
+	float fMax = nNumHalfTile * fInterval;
+	float fMin = -nNumHalfTile * fInterval;
+
+	for (int i = 1; i <= nNumHalfTile; ++i)
+	{
+		m_vecLineVertex.push_back(MyVector3(fMin, 0, i * fInterval));
+		m_vecLineVertex.push_back(MyVector3(fMax, 0, i * fInterval));
+
+		m_vecLineVertex.push_back(MyVector3(fMin, 0, -i * fInterval));
+		m_vecLineVertex.push_back(MyVector3(fMax, 0, -i * fInterval));
+
+		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, fMin));
+		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, fMax));
+
+		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, -fMin));
+		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, -fMax));
+	}
+
+	m_vecLineVertex.push_back(MyVector3(0, 0, fMin));
+	m_vecLineVertex.push_back(MyVector3(0, 0, fMax));
+
+	m_vecLineVertex.push_back(MyVector3(fMin, 0, 0));
+	m_vecLineVertex.push_back(MyVector3(fMax, 0, 0));
+
+	m_vAxisXTextPosition = MyVector3(fMax, 0, 0);
+	m_vAxisZTextPosition = MyVector3(0, 0, fMax);
+}
+
+void MyMainGame::DrawGrid()
+{
+	MyMatrix mat = m_matView * m_matProj * m_matViewport;
+
+	for (size_t i = 0; i < m_vecLineVertex.size(); i += 2)
+	{
+		MyVector3 v1 = m_vecLineVertex[i + 0];
+		MyVector3 v2 = m_vecLineVertex[i + 1];
+
+		v1 = MyVector3::TransformCoord(v1, mat);
+		v2 = MyVector3::TransformCoord(v2, mat);
+	
+		MoveToEx(m_MemDC, v1.x, v1.y, NULL);
+		LineTo(m_MemDC, v2.x, v2.y);
+	}
+}
+
+void MyMainGame::Update_Rotation()
+{
+}
+
+void MyMainGame::Update_Move()
+{
 }

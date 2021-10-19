@@ -27,9 +27,21 @@ private:
 	MyVector3 m_vEye;
 	MyVector3 m_vLookAt;
 	MyVector3 m_vUp;
+	MyVector3 m_vBoxDirection;
 
 	MyVector3 m_vPosition;
 	float m_fBoxRotY;
+
+	// grid
+	//std::vector<MyVector3> m_vecLineVertex;
+	MyVector3 m_vAxisXTextPosition;
+	MyVector3 m_vAxisZTextPosition;
+
+	// camera
+	POINT m_ptPrevMouse;
+	bool m_isLButtonDown;
+	float m_fCameraDistance;
+	MyVector3 m_vCamRotAngle;
 
 public:
 
@@ -38,5 +50,10 @@ public:
 	void Render(HDC hdc);
 	void WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	void SetGrid();
+	void DrawGrid();
+
+	void Update_Rotation();
+	void Update_Move();
 };
 
