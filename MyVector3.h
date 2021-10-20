@@ -16,22 +16,24 @@ public:
 	MyVector3();
 	MyVector3(float _x, float _y, float _z);
 
-	void Print();
+	void Print() const;
 
-	bool operator==(const MyVector3& vec);
-	bool operator!=(const MyVector3& vec);
+	bool operator==(const MyVector3& vec) const;
+	bool operator!=(const MyVector3& vec) const;
 
-	MyVector3 operator+(const MyVector3& vec);
-	MyVector3 operator-(const MyVector3& vec);
+	MyVector3 operator+(const MyVector3& vec) const;
+	MyVector3 operator-(const MyVector3& vec) const;
+	MyVector3& operator+=(const MyVector3& vec);
+	MyVector3& operator-=(const MyVector3& vec);
 
-	MyVector3 operator*(float f);
-	MyVector3 operator/(float f);
+	MyVector3 operator*(float f) const;
+	MyVector3 operator/(float f) const;
 
 	static float Dot(const MyVector3& vec1, const MyVector3& vec2);
 	static MyVector3 Cross(const MyVector3& vec1, const MyVector3& vec2);
 
-	float Length();
-	MyVector3 Normalize();
+	float Length() const;
+	MyVector3 Normalize() const;
 
 	static MyVector3 TransformCoord(MyVector3& vec, MyMatrix& mat);  // point
 	static MyVector3 TransformNormal(MyVector3& vec, MyMatrix& mat); // vector

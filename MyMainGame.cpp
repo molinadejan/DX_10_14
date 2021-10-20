@@ -33,19 +33,19 @@ void MyMainGame::SetUp()
 	GetClientRect(g_hWnd, &rc);
 	
 	m_hBitmap = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
-	m_hOldBitmap = (HBITMAP)SelectObject(m_MemDC, m_hBitmap);
+	m_hOldBitmap = static_cast<HBITMAP>(SelectObject(m_MemDC, m_hBitmap));
 
 	ReleaseDC(g_hWnd, hdc);
 
-	m_vecVertex.push_back(MyVector3(-1.0f, -1.0f, -1.0f)); // 0
-	m_vecVertex.push_back(MyVector3(-1.0f,  1.0f, -1.0f)); // 1
-	m_vecVertex.push_back(MyVector3( 1.0f,  1.0f, -1.0f)); // 2
-	m_vecVertex.push_back(MyVector3( 1.0f, -1.0f, -1.0f)); // 3
+	m_vecVertex.emplace_back(-1.0f, -1.0f, -1.0f); // 0
+	m_vecVertex.emplace_back(-1.0f,  1.0f, -1.0f); // 1
+	m_vecVertex.emplace_back(1.0f,  1.0f, -1.0f); // 2
+	m_vecVertex.emplace_back(1.0f, -1.0f, -1.0f); // 3
 
-	m_vecVertex.push_back(MyVector3(-1.0f, -1.0f,  1.0f)); // 4
-	m_vecVertex.push_back(MyVector3(-1.0f,  1.0f,  1.0f)); // 5
-	m_vecVertex.push_back(MyVector3( 1.0f,  1.0f,  1.0f)); // 6
-	m_vecVertex.push_back(MyVector3( 1.0f, -1.0f,  1.0f)); // 7
+	m_vecVertex.emplace_back(-1.0f, -1.0f,  1.0f); // 4
+	m_vecVertex.emplace_back(-1.0f,  1.0f,  1.0f); // 5
+	m_vecVertex.emplace_back(1.0f,  1.0f,  1.0f); // 6
+	m_vecVertex.emplace_back(1.0f, -1.0f,  1.0f); // 7
 
 	// ¾Õ
 	m_vecIndex.push_back(0);
@@ -118,6 +118,7 @@ void MyMainGame::Update()
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
 
+	// Get Camera Rotation
 	MyMatrix matRX = MyMatrix::RotationX(m_vCamRotAngle.x);
 	MyMatrix matRY = MyMatrix::RotationY(m_vCamRotAngle.y);
 	MyMatrix matRC = matRX * matRY;
@@ -161,7 +162,7 @@ void MyMainGame::Render(HDC hdc)
 		v1 = MyVector3::TransformCoord(v1, matWVP);
 		v2 = MyVector3::TransformCoord(v2, matWVP);
 
-		// To do someting ......
+		// To do something ......
 
 		if (IsBackFace(v0, v1, v2))
 			continue;
@@ -242,27 +243,30 @@ void MyMainGame::SetGrid()
 	float fMax = nNumHalfTile * fInterval;
 	float fMin = -nNumHalfTile * fInterval;
 
+	// draw grid
 	for (int i = 1; i <= nNumHalfTile; ++i)
 	{
-		m_vecLineVertex.push_back(MyVector3(fMin, 0, i * fInterval));
-		m_vecLineVertex.push_back(MyVector3(fMax, 0, i * fInterval));
+		m_vecLineVertex.emplace_back(fMin, 0, i * fInterval);
+		m_vecLineVertex.emplace_back(fMax, 0, i * fInterval);
 
-		m_vecLineVertex.push_back(MyVector3(fMin, 0, -i * fInterval));
-		m_vecLineVertex.push_back(MyVector3(fMax, 0, -i * fInterval));
+		m_vecLineVertex.emplace_back(fMin, 0, -i * fInterval);
+		m_vecLineVertex.emplace_back(fMax, 0, -i * fInterval);
 
-		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, fMin));
-		m_vecLineVertex.push_back(MyVector3(i * fInterval, 0, fMax));
+		m_vecLineVertex.emplace_back(i * fInterval, 0, fMin);
+		m_vecLineVertex.emplace_back(i * fInterval, 0, fMax);
 
-		m_vecLineVertex.push_back(MyVector3(-i * fInterval, 0, fMin));
-		m_vecLineVertex.push_back(MyVector3(-i * fInterval, 0, fMax));
+		m_vecLineVertex.emplace_back(-i * fInterval, 0, fMin);
+		m_vecLineVertex.emplace_back(-i * fInterval, 0, fMax);
 	}
 
-	m_vecLineVertex.push_back(MyVector3(0, 0, fMin));
-	m_vecLineVertex.push_back(MyVector3(0, 0, fMax));
+	// out line
+	m_vecLineVertex.emplace_back(0, 0, fMin);
+	m_vecLineVertex.emplace_back(0, 0, fMax);
 
-	m_vecLineVertex.push_back(MyVector3(fMin, 0, 0));
-	m_vecLineVertex.push_back(MyVector3(fMax, 0, 0));
+	m_vecLineVertex.emplace_back(fMin, 0, 0);
+	m_vecLineVertex.emplace_back(fMax, 0, 0);
 
+	// x, z text
 	m_vAxisXTextPosition = MyVector3(fMax, 0, 0);
 	m_vAxisZTextPosition = MyVector3(0, 0, fMax);
 }

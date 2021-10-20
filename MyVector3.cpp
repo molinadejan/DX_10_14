@@ -16,39 +16,53 @@ MyVector3::MyVector3()
 MyVector3::MyVector3(float _x, float _y, float _z)
 	: x(_x), y(_y), z(_z) { }
 
-void MyVector3::Print()
+void MyVector3::Print() const
 {
 	printf("Vector : (%8.2f, %8.2f, %8.2f)\n", x, y, z);
 }
 
-bool MyVector3::operator==(const MyVector3 & vec)
+bool MyVector3::operator==(const MyVector3 & vec) const
 {
 	return Equal(x, vec.x) && Equal(y, vec.y) && Equal(z, vec.z);
 }
 
-bool MyVector3::operator!=(const MyVector3 & vec)
+bool MyVector3::operator!=(const MyVector3 & vec) const
 {
 	return !(*this == vec);
 }
 
-MyVector3 MyVector3::operator+(const MyVector3 & vec)
+MyVector3 MyVector3::operator+(const MyVector3 & vec) const
 {
-	return MyVector3(x + vec.x, y + vec.y, z + vec.z);
+	return {x + vec.x, y + vec.y, z + vec.z};
 }
 
-MyVector3 MyVector3::operator-(const MyVector3 & vec)
+MyVector3 MyVector3::operator-(const MyVector3 & vec) const
 {
-	return MyVector3(x - vec.x, y - vec.y, z - vec.z);
+	return {x - vec.x, y - vec.y, z - vec.z};
 }
 
-MyVector3 MyVector3::operator*(float f)
+MyVector3& MyVector3::operator+=(const MyVector3& vec)
 {
-	return MyVector3(x * f, y * f, z * f);
+	this->x += vec.x;
+	this->y += vec.y;
+	return (*this);
 }
 
-MyVector3 MyVector3::operator/(float f)
+MyVector3& MyVector3::operator-=(const MyVector3& vec)
 {
-	return MyVector3(x / f, y / f, z / f);
+	this->x -= vec.x;
+	this->y -= vec.y;
+	return (*this);
+}
+
+MyVector3 MyVector3::operator*(float f) const
+{
+	return {x * f, y * f, z * f};
+}
+
+MyVector3 MyVector3::operator/(float f) const
+{
+	return {x / f, y / f, z / f};
 }
 
 float MyVector3::Dot(const MyVector3 & vec1, const MyVector3 & vec2)
@@ -58,20 +72,22 @@ float MyVector3::Dot(const MyVector3 & vec1, const MyVector3 & vec2)
 
 MyVector3 MyVector3::Cross(const MyVector3 & vec1, const MyVector3 & vec2)
 {
-	return MyVector3(vec1.y * vec2.z - vec1.z * vec2.y, 
+	return {
+		vec1.y * vec2.z - vec1.z * vec2.y, 
 					 vec1.z * vec2.x - vec1.x * vec2.z, 
-					 vec1.x * vec2.y - vec1.y * vec2.x);
+					 vec1.x * vec2.y - vec1.y * vec2.x
+	};
 }
 
-float MyVector3::Length()
+float MyVector3::Length() const
 {
 	return sqrt(x * x + y * y + z * z);
 }
 
-MyVector3 MyVector3::Normalize()
+MyVector3 MyVector3::Normalize() const
 {
 	float len = Length();
-	return MyVector3(x / len, y / len, z / len);
+	return {x / len, y / len, z / len};
 }
 
 MyVector3 MyVector3::TransformCoord(MyVector3& vec, MyMatrix& mat)
